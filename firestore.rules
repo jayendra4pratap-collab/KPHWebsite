@@ -1,0 +1,10 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Server-only data access is planned. Admin SDK authorization must be checked
+    // in the server data layer; these rules do not restrict Admin SDK requests.
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
