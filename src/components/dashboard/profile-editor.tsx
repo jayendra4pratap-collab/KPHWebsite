@@ -33,24 +33,25 @@ function ProfileForm({
         <MemberAvatar profile={draft} large />
         <div>
           <strong>{draft.displayName}</strong>
-          <p>Your name, your corner of the hub.</p>
+          <p>{profile.email || "Your Google account profile"}</p>
         </div>
       </div>
       <div className="profile-field">
-        <label htmlFor="display-name">Your name</label>
+        <label htmlFor="display-name">Google account name</label>
         <input
           id="display-name"
           name="displayName"
           autoComplete="name"
           maxLength={60}
           required
+          readOnly
           value={name}
           onChange={(event) => setName(event.target.value)}
           aria-describedby="name-help name-error"
           aria-invalid={Boolean(error)}
         />
         <p id="name-help">
-          This name appears next to your avatar in the sidebar and header.
+          Your name comes from your Google account and appears across the hub.
         </p>
         <p id="name-error" className="form-error" role="alert">
           {error}
@@ -103,12 +104,12 @@ export function ProfileEditor() {
         <ProfileForm
           key={`${profile.displayName}:${profile.avatarColor}`}
           profile={profile}
-          onSave={(next) => {
+            onSave={(next) => {
             const saved = saveProfile(next);
             setFailed(!saved);
             setMessage(
               saved
-                ? "Your preview profile has been updated."
+                ? "Your avatar preference has been updated."
                 : "Your browser couldn’t save these changes. Please allow local storage and try again.",
             );
           }}
@@ -125,8 +126,7 @@ export function ProfileEditor() {
           )}
         </div>
         <p className="sample-note">
-          This is a preview profile. Changes are saved only in this browser.
-          Account sign-in will be added in the next phase.
+          Your account name and email are provided by Google. Avatar color is saved in this browser.
         </p>
       </div>
     </div>

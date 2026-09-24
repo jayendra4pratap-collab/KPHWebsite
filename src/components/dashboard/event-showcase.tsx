@@ -4,28 +4,12 @@ import { useState } from "react";
 import * as Dialog from "@radix-ui/react-dialog";
 import {
   BookOpen,
-  CalendarDays,
   ChartColumn,
   CodeXml,
   Download,
-  Medal,
-  Trophy,
   X,
 } from "lucide-react";
 import type { FeaturedEvent } from "@/types";
-
-const dateFormat = new Intl.DateTimeFormat("en-US", {
-  month: "long",
-  day: "numeric",
-  year: "numeric",
-  timeZone: "Asia/Kolkata",
-});
-const timeFormat = new Intl.DateTimeFormat("en-US", {
-  hour: "numeric",
-  minute: "2-digit",
-  second: "2-digit",
-  timeZone: "Asia/Kolkata",
-});
 
 function downloadStandings(event: FeaturedEvent) {
   const rows = [
@@ -77,7 +61,6 @@ function StandingRow({
 export function EventShowcase({ event }: { event: FeaturedEvent }) {
   const [active, setActive] = useState(0);
   const photo = event.gallery[active];
-  const when = new Date(event.dateTime);
 
   return (
     <article className="event-showcase" aria-labelledby="showcase-title">
@@ -97,30 +80,9 @@ export function EventShowcase({ event }: { event: FeaturedEvent }) {
                 <strong>{event.title}</strong>
                 <small>Contest certificate</small>
               </div>
-              <Trophy className="scene-trophy" size={64} strokeWidth={1} />
             </div>
           )}
-          <div className="showcase-chips">
-            <span className="chip chip-accent">{event.badge}</span>
-            <span className="chip">
-              <Medal size={14} />
-              Prize Pool: {event.prizePool}
-            </span>
-          </div>
-          <figcaption className="showcase-footer">
-            <span className="chip">
-              <CalendarDays size={14} className="chip-icon" />
-              <time dateTime={event.dateTime}>
-                {dateFormat.format(when)} · {timeFormat.format(when)}
-              </time>
-            </span>
-            <span className="chip">
-              Lead Host:{" "}
-              <b>
-                {event.host.name} ({event.host.team})
-              </b>
-            </span>
-          </figcaption>
+
         </figure>
 
         <div className="showcase-strip">
@@ -184,7 +146,7 @@ export function EventShowcase({ event }: { event: FeaturedEvent }) {
           ))}
         </dl>
 
-        <h3 className="showcase-label">Top Standings</h3>
+        {/* <h3 className="showcase-label">Top Standings</h3>
         <ol className="standing-list">
           {event.standings.slice(0, 2).map((standing) => (
             <StandingRow
@@ -193,7 +155,7 @@ export function EventShowcase({ event }: { event: FeaturedEvent }) {
               total={event.problemCount}
             />
           ))}
-        </ol>
+        </ol> */}
 
         <div className="showcase-actions">
           <a

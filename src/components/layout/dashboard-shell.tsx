@@ -1,31 +1,21 @@
 "use client";
 
-import { useState, type ReactNode } from "react";
+import type { ReactNode } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import * as Dialog from "@radix-ui/react-dialog";
-import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 import * as Tooltip from "@radix-ui/react-tooltip";
 import {
-  ChevronDown,
   ChevronRight,
   CodeXml,
-  Menu,
   Moon,
   PanelLeftClose,
   PanelLeftOpen,
   Sun,
-  UserRound,
-  X,
 } from "lucide-react";
-import { navigation, navigationItems } from "@/config/navigation";
+import { navigation } from "@/config/navigation";
 import { useLocalPreference, useTablet } from "@/lib/local-preferences";
 import { useTheme } from "@/components/theme-provider";
-import {
-  MemberAvatar,
-  ProfileProvider,
-  useProfile,
-} from "@/components/profile-provider";
+import { MemberAvatar, ProfileProvider, useProfile } from "@/components/profile-provider";
 
 function NavTooltip({
   label,
@@ -52,13 +42,9 @@ function NavTooltip({
 
 function Sidebar({
   collapsed = false,
-  mobile = false,
-  onNavigate,
   onToggle,
 }: {
   collapsed?: boolean;
-  mobile?: boolean;
-  onNavigate?: () => void;
   onToggle?: () => void;
 }) {
   const pathname = usePathname();
@@ -74,7 +60,6 @@ function Sidebar({
           href="/dashboard"
           className="brand"
           aria-label="Knuth Programming Hub dashboard"
-          onClick={onNavigate}
         >
           <span className="brand-symbol">
             <CodeXml size={23} strokeWidth={2.2} />
@@ -86,19 +71,11 @@ function Sidebar({
             <span>PROGRAMMING HUB</span>
           </span>
         </Link>
-        {mobile && (
-          <Dialog.Close
-            className="icon-button mobile-close"
-            aria-label="Close navigation"
-          >
-            <X size={20} />
-          </Dialog.Close>
-        )}
       </div>
 
       <nav
         className="sidebar-nav"
-        aria-label={mobile ? "Mobile navigation" : "Main navigation"}
+        aria-label="Main navigation"
       >
         {navigation.map((group) => {
           const links = group.items.map((item) => {
@@ -122,7 +99,6 @@ function Sidebar({
                       ? `${item.label}${upcoming ? ", coming soon" : ""}`
                       : undefined
                   }
-                  onClick={onNavigate}
                 >
                   <item.icon size={17} strokeWidth={1.7} aria-hidden="true" />
                   <span className="nav-label">{item.label}</span>
@@ -156,23 +132,21 @@ function Sidebar({
       </nav>
 
       <div className="sidebar-bottom">
-        {!mobile && (
-          <NavTooltip enabled={collapsed} label="Expand sidebar">
-            <button
-              className="collapse-button"
-              onClick={onToggle}
-              aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
-              aria-expanded={!collapsed}
-            >
-              {collapsed ? (
-                <PanelLeftOpen size={18} />
-              ) : (
-                <PanelLeftClose size={18} />
-              )}
-              <span className="nav-label">Collapse sidebar</span>
-            </button>
-          </NavTooltip>
-        )}
+        <NavTooltip enabled={collapsed} label="Expand sidebar">
+          <button
+            className="collapse-button"
+            onClick={onToggle}
+            aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
+            aria-expanded={!collapsed}
+          >
+            {collapsed ? (
+              <PanelLeftOpen size={18} />
+            ) : (
+              <PanelLeftClose size={18} />
+            )}
+            <span className="nav-label">Collapse sidebar</span>
+          </button>
+        </NavTooltip>
         <NavTooltip enabled={collapsed} label={themeLabel}>
           <button
             type="button"
@@ -194,7 +168,6 @@ function Sidebar({
           <Link
             href="/dashboard/profile"
             className={`sidebar-profile${pathname === "/dashboard/profile" ? " profile-active" : ""}`}
-            onClick={onNavigate}
             aria-label={`View ${profile.displayName}'s profile`}
             aria-current={
               pathname === "/dashboard/profile" ? "page" : undefined
@@ -218,20 +191,11 @@ function Sidebar({
 }
 
 function ShellContent({ children }: { children: ReactNode }) {
-  const pathname = usePathname();
   const [preference, setPreference] = useLocalPreference(
     "kph-sidebar-collapsed",
   );
   const tablet = useTablet();
   const collapsed = preference === null ? tablet : preference === "true";
-  const [mobileOpen, setMobileOpen] = useState(false);
-  const { profile } = useProfile();
-  const title =
-    pathname === "/dashboard/profile"
-      ? "My profile"
-      : (navigationItems.find((item) => item.href === pathname)?.label ??
-        "Dashboard");
-
   return (
     <Tooltip.Provider delayDuration={150}>
       <div className="app-shell" data-collapsed={collapsed}>
@@ -246,83 +210,6 @@ function ShellContent({ children }: { children: ReactNode }) {
         </aside>
 
         <div className="workspace">
-          <header className="workspace-header">
-            <div className="header-left">
-              <Dialog.Root open={mobileOpen} onOpenChange={setMobileOpen}>
-                <Dialog.Trigger asChild>
-                  <button
-                    className="icon-button mobile-menu"
-                    aria-label="Open navigation"
-                  >
-                    <Menu size={21} />
-                  </button>
-                </Dialog.Trigger>
-                <Dialog.Portal>
-                  <Dialog.Overlay className="drawer-overlay" />
-                  <Dialog.Content
-                    className="mobile-sidebar"
-                    aria-describedby="navigation-description"
-                  >
-                    <Dialog.Title className="sr-only">Navigation</Dialog.Title>
-                    <Dialog.Description
-                      id="navigation-description"
-                      className="sr-only"
-                    >
-                      Navigate your Knuth Programming Hub workspace.
-                    </Dialog.Description>
-                    <Sidebar mobile onNavigate={() => setMobileOpen(false)} />
-                  </Dialog.Content>
-                </Dialog.Portal>
-              </Dialog.Root>
-              <span className="breadcrumb-root">Workspace</span>
-              <ChevronRight
-                className="breadcrumb-arrow"
-                size={14}
-                aria-hidden="true"
-              />
-              <span className="breadcrumb-current">{title}</span>
-            </div>
-            <div className="header-right">
-              <span className="preview-badge">
-                <span />
-                Design preview
-              </span>
-              <span className="header-divider" />
-              <DropdownMenu.Root>
-                <DropdownMenu.Trigger asChild>
-                  <button
-                    className="header-profile"
-                    aria-label={`Account menu for ${profile.displayName}`}
-                  >
-                    <MemberAvatar profile={profile} />
-                    <span>{profile.displayName}</span>
-                    <ChevronDown size={14} />
-                  </button>
-                </DropdownMenu.Trigger>
-                <DropdownMenu.Portal>
-                  <DropdownMenu.Content
-                    className="dropdown-menu"
-                    align="end"
-                    sideOffset={10}
-                  >
-                    <DropdownMenu.Label className="dropdown-label">
-                      Your workspace
-                    </DropdownMenu.Label>
-                    <DropdownMenu.Item asChild>
-                      <Link href="/dashboard/profile" className="dropdown-item">
-                        <UserRound size={16} />
-                        View profile
-                      </Link>
-                    </DropdownMenu.Item>
-                    <DropdownMenu.Separator className="dropdown-separator" />
-                    <p className="dropdown-note">
-                      You’re exploring a sample member profile.
-                    </p>
-                  </DropdownMenu.Content>
-                </DropdownMenu.Portal>
-              </DropdownMenu.Root>
-            </div>
-          </header>
           <main id="main-content" tabIndex={-1} className="main-content">
             {children}
           </main>

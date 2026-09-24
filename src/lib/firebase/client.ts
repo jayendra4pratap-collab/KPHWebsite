@@ -1,9 +1,9 @@
 "use client";
 
 import { getApp, getApps, initializeApp } from "firebase/app";
-import { getAuth } from "firebase/auth";
+import { GoogleAuthProvider, getAuth } from "firebase/auth";
 
-// Deferred until the authentication phase: importing this module makes no connection.
+// Firebase is initialized only when authentication is used.
 export function getFirebaseAuth() {
   const config = {
     apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
@@ -16,4 +16,8 @@ export function getFirebaseAuth() {
       "Firebase Authentication is not configured. See .env.example.",
     );
   return getAuth(getApps().length ? getApp() : initializeApp(config));
+}
+
+export function getGoogleProvider() {
+  return new GoogleAuthProvider();
 }

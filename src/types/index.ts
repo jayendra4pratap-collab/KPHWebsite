@@ -1,5 +1,6 @@
 export type MemberProfile = {
   displayName: string;
+  email?: string;
   avatarColor: "sage" | "blue" | "rose";
 };
 export type Standing = {

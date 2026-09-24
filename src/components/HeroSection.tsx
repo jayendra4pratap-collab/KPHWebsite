@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import Image from "next/image";
 import {
   CircleCheck,
   Gauge,
@@ -80,7 +81,7 @@ const HeroSection: React.FC = () => {
           {/* RIGHT */}
           <div className="runtime-wrapper">
             <div className="runtime-card">
-              <div className="runtime-header">
+              {/* <div className="runtime-header">
                 <div className="runtime-title">
                   <span className="terminal-dot error" />
                   <span className="terminal-dot secondary" />
@@ -90,12 +91,14 @@ const HeroSection: React.FC = () => {
                 </div>
 
                 <span className="online-badge">ONLINE</span>
-              </div>
+              </div> */}
 
               <div className="runtime-preview">
-                <img
+                <Image
                   src="https://lh3.googleusercontent.com/aida-public/AB6AXuD_dHjsbqOWtWTBKADMsCK0iU5IjC79rUQC-3BNHpz705CEbgjdt3kXurYuMJH5axa8eyW6rqJHv-fjKzuWpbWma8MSMfOmbOtYCp8sK2tPjiav4eJdWhSOVH9mYMgRjnhvMUO1ZzbXLdV-N8clSqj3mEvC369lKbeGRqm14Z7Py3fYruRVUf42Y9PGpX_SX8bBNY_jaEsQIufKfgnHsw_0IHgG57EriKZ2pg8agLxgv9MItA4ZcAk-"
                   alt="Competitive programming workstation"
+                  fill
+                  sizes="(max-width: 768px) 100vw, 40vw"
                 />
 
                 <div className="preview-overlay" />
